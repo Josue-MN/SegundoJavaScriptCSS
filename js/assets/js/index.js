@@ -95,9 +95,12 @@ function validarLargoMinimo(elemento,valor,eError){
 
 function cargarTabla(){
     let tablaPersonas = document.getElementById("tablaPersonas")  //recupera el elemento del id
-    let personasMap = personas.map((p)=>{ //concatena los datos con un str
+    let personasMap = personas.map((p,index)=>{ //concatena los datos con un str
         return "<tr><td>"+p.nombre+"</td>"+
-                "<td>"+p.apellido+"</td></tr>"
+                "<td>"+p.apellido+"</td>"+
+                "<td><button onclick='eliminar("+index+")'>Eliminar</button>"+
+                "<button onclick='cargarDatos("+index+")'>Actualizar</button>"+
+                "</td></tr>"
     })
     console.log("Convertiendo...")
     console.log(personasMap)
@@ -105,6 +108,53 @@ function cargarTabla(){
     tablaPersonas.innerHTML = personasStr //ingresa el str en el HTML
 }
 
+
+function eliminar(indice){
+    //alert("Eliminando el indice"+indice)
+    personas = personas.filter((p,index)=>{
+        if(index != indice){ //mantiene lo que no temgan en indice a eliminar
+            return p
+        }
+    })
+    console.log("Despues de filtrar")
+    console.log(personas)
+    cargarTabla()
+}
+
+function cargarDatos(indice){
+    let eNombre = document.getElementById("nombre1")
+    let eApellido = document.getElementById("apellido1")
+    let persona = personas.filter((p,index)=>{
+        if(index == indice){ //se   queda con la perosna del id ue coincida
+            return p
+        }
+    })
+    console.log(persona)
+    eNombre.value = persona[0].nombre
+    eApellido.value = persona[0].apellido
+    let eBtnActualizar = document.getElementById("btnActualizar")
+    eBtnActualizar.value = indice
+}
+
+
+function actualizar(){
+    let eNombre = document.getElementById("nombre1")
+    let eApellido = document.getElementById("apellido1")
+    let eBtnActualizar = document.getElementById("btnActualizar")
+    let indice = eBtnActualizar.value //GUARDA EL INDICE SELECIONADO EN ACTUALIZAR
+    personas = personas.map((p,index)=>{
+        if(index == indice){
+            return{
+                nombre: eNombre.value,
+                apellido: eApellido.value
+            }
+        }
+        else{
+            return p
+        }
+    })
+    cargarTabla()
+}
 
 
 
